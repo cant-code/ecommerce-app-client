@@ -4,6 +4,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 import { styled, alpha } from "@mui/material/styles";
 
 import Area1 from "../static/images/area/23433.jpg";
@@ -22,12 +25,7 @@ const Search = styled("div")(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.25),
     borderColor: alpha(theme.palette.common.black, 1),
   },
-  marginTop: theme.spacing(3),
-  marginRight: theme.spacing(2),
   width: "50%",
-  [theme.breakpoints.up("sm")]: {
-    marginRight: theme.spacing(3),
-  },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -56,6 +54,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [searchVal, setSearchVal] = useState("");
   const [data, setData] = useState(null);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   const search = async (e) => {
     e.preventDefault();
@@ -71,17 +71,40 @@ export default function Dashboard() {
   return (
     <Container>
       <form onSubmit={search}>
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            value={searchVal}
-            onChange={(e) => setSearchVal(e.target.value)}
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
+        <Stack direction="row" spacing={3} sx={{ marginTop: 3 }}>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+          <DateTimePicker
+            label="Checkin"
+            renderInput={(props) => (
+              <TextField disabled size="small" {...props} />
+            )}
+            allowKeyboardControl="false"
+            value={startDate}
+            disablePast
+            onChange={setStartDate}
+            minutesStep={15}
           />
-        </Search>
+          <DateTimePicker
+            label="Checkout"
+            renderInput={(props) => (
+              <TextField disabled size="small" {...props} />
+            )}
+            value={endDate}
+            minDateTime={startDate}
+            onChange={setEndDate}
+            minutesStep={15}
+          />
+        </Stack>
         <Button type="submit" sx={{ marginTop: 1 }} variant="contained">
           Search
         </Button>
