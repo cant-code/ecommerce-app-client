@@ -13,7 +13,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
 import Image from "../static/images/5765700.jpg";
-import { ERROR, FIELD_REQUIRED, LOGGED_IN, REFRESH_TOKEN, SUCCESS, TOKEN } from "../Utils/Constants";
+import {
+  APPLICATION_JSON,
+  ERROR,
+  FIELD_REQUIRED,
+  LOGGED_IN,
+  REFRESH_TOKEN,
+  SUCCESS,
+  TOKEN,
+} from "../Utils/Constants";
 import { useSnackbar } from "../Context/snackbar";
 
 const LoginGrid = styled(Grid)(() => ({
@@ -65,7 +73,7 @@ export default function Login() {
       if (!!!formErrors.username.length && !!!formErrors.password.length) {
         const requestOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": APPLICATION_JSON },
           body: JSON.stringify(body),
         };
         const res = await fetch("/api/login", requestOptions);

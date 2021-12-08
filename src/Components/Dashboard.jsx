@@ -4,9 +4,16 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import DateTimePicker from "@mui/lab/DateTimePicker";
+import DateTimePicker from "@mui/lab/MobileDateTimePicker";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
+import {
+  roundToNearestMinutes,
+  addHours,
+  addMinutes,
+  format,
+  isPast,
+} from "date-fns";
 import { styled, alpha } from "@mui/material/styles";
 
 import Area1 from "../static/images/area/23433.jpg";
@@ -48,20 +55,40 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+let baseTime = roundToNearestMinutes(new Date(), { nearestTo: 15 });
+baseTime = isPast(baseTime) ? addMinutes(baseTime, 15) : baseTime;
+
 export default function Dashboard() {
   const areas = [Area1, Area2, Area3];
 
   const [loading, setLoading] = useState(false);
   const [searchVal, setSearchVal] = useState("");
   const [data, setData] = useState(null);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(baseTime);
+  const [endDate, setEndDate] = useState(addHours(baseTime, 1));
+
+  const dataMapper = () => {
+    return data
+      ?.map((x) =>
+        x.parkingSlots.map((y) => {
+          const temp = y;
+          y.area = x.name;
+          return temp;
+        })
+      )
+      .flat(1);
+  };
 
   const search = async (e) => {
     e.preventDefault();
     setLoading(true);
     const res = await customFetch(
-      "/area/search?" + new URLSearchParams({ area: searchVal })
+      "/area/search?" +
+        new URLSearchParams({
+          startTimeStamp: format(startDate, "yyyy-MM-dd'T'HH:mm:ss"),
+          endTimeStamp: format(endDate, "yyyy-MM-dd'T'HH:mm:ss"),
+          search: searchVal,
+        })
     );
     const data = await res.json();
     setData(data);
@@ -91,6 +118,7 @@ export default function Dashboard() {
             allowKeyboardControl="false"
             value={startDate}
             disablePast
+            minDateTime={baseTime}
             onChange={setStartDate}
             minutesStep={15}
           />
@@ -100,7 +128,7 @@ export default function Dashboard() {
               <TextField disabled size="small" {...props} />
             )}
             value={endDate}
-            minDateTime={startDate}
+            minDateTime={addMinutes(startDate, 15)}
             onChange={setEndDate}
             minutesStep={15}
           />
@@ -112,7 +140,7 @@ export default function Dashboard() {
       {loading ? (
         <Typography variant="h5">Loading...</Typography>
       ) : (
-        data?.length > 0 && <CardWrapper images={areas} data={data} />
+        data?.length > 0 && <CardWrapper images={areas} data={dataMapper()} />
       )}
     </Container>
   );
