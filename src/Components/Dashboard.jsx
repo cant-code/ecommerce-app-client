@@ -21,6 +21,8 @@ import Area2 from "../static/images/area/23434.jpg";
 import Area3 from "../static/images/area/20424685.jpg";
 import customFetch from "../Utils/CustomFetch";
 import CardWrapper from "./CardWrapper";
+import { SetItem } from "../Utils/UtilFunctions";
+import { END_TIME, START_TIME } from "../Utils/Constants";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -82,16 +84,20 @@ export default function Dashboard() {
   const search = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const startTime = format(startDate, "yyyy-MM-dd'T'HH:mm:ss");
+    const endTime = format(endDate, "yyyy-MM-dd'T'HH:mm:ss");
     const res = await customFetch(
       "/area/search?" +
         new URLSearchParams({
-          startTimeStamp: format(startDate, "yyyy-MM-dd'T'HH:mm:ss"),
-          endTimeStamp: format(endDate, "yyyy-MM-dd'T'HH:mm:ss"),
+          startTimeStamp: startTime,
+          endTimeStamp: endTime,
           search: searchVal,
         })
     );
     const data = await res.json();
     setData(data);
+    SetItem(START_TIME, startTime);
+    SetItem(END_TIME, endTime);
     setLoading(false);
   };
 

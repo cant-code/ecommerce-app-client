@@ -37,10 +37,7 @@ export default function FlatCard(props) {
         <CardContent sx={{ flex: "1 0 auto" }}>
           <Typography variant="h5">Name: {data.name}</Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Price: &#8377;{data.price}
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Availability: {data.availableSlots}/{data.totalSlots}
+            Price: &#8377;{data.price} / hr
           </Typography>
         </CardContent>
       </Box>

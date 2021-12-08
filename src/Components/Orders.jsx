@@ -9,6 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import { differenceInMinutes } from "date-fns";
 import customFetch from "../Utils/CustomFetch";
 
 export default function Orders() {
@@ -38,6 +39,7 @@ export default function Orders() {
                 <TableCell align="center">ID</TableCell>
                 <TableCell align="center">Status</TableCell>
                 <TableCell align="center">Date Created</TableCell>
+                <TableCell align="center">Start Time</TableCell>
                 <TableCell align="center">Expiry</TableCell>
                 <TableCell align="center">Duration</TableCell>
                 <TableCell align="center">Total Cost</TableCell>
@@ -80,11 +82,14 @@ function Row(props) {
           {new Date(row.dateCreated).toLocaleString()}
         </TableCell>
         <TableCell align="center">
+          {new Date(row.start).toLocaleString()}
+        </TableCell>
+        <TableCell align="center">
           {new Date(row.expiry).toLocaleString()}
         </TableCell>
         <TableCell align="center">
-          {row.duration}
-          {row.duration === 1 ? "hr" : "hrs"}
+          {differenceInMinutes(new Date(row.expiry), new Date(row.start)) / 60}
+          hrs
         </TableCell>
         <TableCell align="center">&#8377;{row.totalCost}</TableCell>
       </TableRow>

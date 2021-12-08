@@ -23,6 +23,7 @@ import {
   TOKEN,
 } from "../Utils/Constants";
 import { useSnackbar } from "../Context/snackbar";
+import { SetItem } from "../Utils/UtilFunctions";
 
 const LoginGrid = styled(Grid)(() => ({
   height: "100vh",
@@ -83,8 +84,8 @@ export default function Login() {
           setMsg(data.detail, ERROR);
         } else {
           setMsg(LOGGED_IN, SUCCESS);
-          localStorage.setItem(TOKEN, data.access_token);
-          localStorage.setItem(REFRESH_TOKEN, data.refresh_token);
+          SetItem(TOKEN, data.access_token);
+          SetItem(REFRESH_TOKEN, data.refresh_token);
           navigate("/");
         }
       }

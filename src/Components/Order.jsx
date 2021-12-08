@@ -11,12 +11,16 @@ import FlatCard from "./FlatCard";
 
 import Img1 from "../static/images/bill/1.jpg";
 import Img2 from "../static/images/bill/2.jpg";
+import customFetch from "../Utils/CustomFetch";
+import { APPLICATION_JSON, SUCCESS } from "../Utils/Constants";
+import { useSnackbar } from "../Context/snackbar";
 
 export default function Order() {
   const navigate = useNavigate();
   const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { setMsg } = useSnackbar();
   const images = [Img1, Img2];
 
   useEffect(() => {
@@ -28,6 +32,20 @@ export default function Order() {
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const endBooking = async () => {
+    const res = await customFetch(`/orders/${data?.id}/finish`, {
+      method: "POST",
+      headers: { "Content-Type": APPLICATION_JSON },
+    });
+    if (res?.status === 200) {
+      setData({
+        ...data,
+        status: "EXPIRED",
+      });
+      setMsg("Successful", SUCCESS);
+    }
+  };
 
   return (
     <Container sx={{ marginTop: 2 }}>
@@ -52,11 +70,24 @@ export default function Order() {
               </Typography>
               <Typography>Status: {data.status}</Typography>
               <Typography>
-                Expiry: {new Date(data.expiry).toLocaleString()}
+                Start Time: {new Date(data.start).toLocaleString()}
+              </Typography>
+              <Typography>
+                Tentative End Time: {new Date(data.expiry).toLocaleString()}
               </Typography>
               <Typography>Total Cost: &#8377;{data.totalCost}</Typography>
             </Stack>
           </Stack>
+          {data?.status === "CONFIRMED" && (
+            <Button
+              variant="contained"
+              onClick={endBooking}
+              color="error"
+              sx={{ mb: 2 }}
+            >
+              End Booking
+            </Button>
+          )}
           <FlatCard data={data.items} />
         </Paper>
       )}
