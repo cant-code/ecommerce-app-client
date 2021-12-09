@@ -18,7 +18,7 @@ export default function ItemCard({ image, data }) {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {data.name}
+          {data.name} ({data.area})
         </Typography>
         <Typography variant="body1" component="div">
           {data.title}s:
@@ -30,7 +30,7 @@ export default function ItemCard({ image, data }) {
             variant="body2"
             color="text.secondary"
           >
-            {item.name}
+            {item.name}: &#8377;{item.price}
           </Typography>
         ))}
       </CardContent>

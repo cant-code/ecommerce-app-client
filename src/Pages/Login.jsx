@@ -13,8 +13,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
 import Image from "../static/images/5765700.jpg";
-import { ERROR, FIELD_REQUIRED, LOGGED_IN, REFRESH_TOKEN, SUCCESS, TOKEN } from "../Utils/Constants";
+import {
+  APPLICATION_JSON,
+  ERROR,
+  FIELD_REQUIRED,
+  LOGGED_IN,
+  REFRESH_TOKEN,
+  SUCCESS,
+  TOKEN,
+} from "../Utils/Constants";
 import { useSnackbar } from "../Context/snackbar";
+import { SetItem } from "../Utils/UtilFunctions";
 
 const LoginGrid = styled(Grid)(() => ({
   height: "100vh",
@@ -65,7 +74,7 @@ export default function Login() {
       if (!!!formErrors.username.length && !!!formErrors.password.length) {
         const requestOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": APPLICATION_JSON },
           body: JSON.stringify(body),
         };
         const res = await fetch("/api/login", requestOptions);
@@ -75,8 +84,8 @@ export default function Login() {
           setMsg(data.detail, ERROR);
         } else {
           setMsg(LOGGED_IN, SUCCESS);
-          localStorage.setItem(TOKEN, data.access_token);
-          localStorage.setItem(REFRESH_TOKEN, data.refresh_token);
+          SetItem(TOKEN, data.access_token);
+          SetItem(REFRESH_TOKEN, data.refresh_token);
           navigate("/");
         }
       }

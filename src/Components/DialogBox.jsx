@@ -5,25 +5,42 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import Button from "@mui/material/Button";
-import Slider from "@mui/material/Slider";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import {
+  addMinutes,
+  roundToNearestMinutes,
+  isPast,
+  differenceInMinutes,
+} from "date-fns";
+import { GetItem } from "../Utils/UtilFunctions";
+import { END_TIME, START_TIME } from "../Utils/Constants";
+
+let baseTime = roundToNearestMinutes(new Date(), { nearestTo: 15 });
+baseTime = isPast(baseTime) ? addMinutes(baseTime, 15) : baseTime;
 
 export default function DialogBox(props) {
   const { onClose, open, cost, ...other } = props;
-  const [value, setValue] = useState(1);
+  const [startTime, setStartTime] = useState(new Date(GetItem(START_TIME)));
+  const [endTime, setEndTime] = useState(new Date(GetItem(END_TIME)));
 
   const handleCancel = () => {
     onClose();
   };
 
   const handleOk = () => {
-    onClose(value);
+    onClose(startTime, endTime);
   };
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  const calcTime = () => {
+    return differenceInMinutes(endTime, startTime) / 60;
   };
+
+  // const handleChange = (event) => {
+  //   setValue(event.target.value);
+  // };
 
   return (
     <Dialog
@@ -33,28 +50,42 @@ export default function DialogBox(props) {
       onClose={handleCancel}
       {...other}
     >
-      <DialogTitle>Select Hours</DialogTitle>
+      <DialogTitle>Place Order</DialogTitle>
       <DialogContent>
-        <DialogContentText>Select the amount of hours:</DialogContentText>
-        <Slider
-          aria-label="Hours"
-          defaultValue={1}
-          value={value}
-          onChange={handleChange}
-          valueLabelDisplay="off"
-          step={1}
-          marks
-          min={1}
-          max={10}
-        />
-        <Typography variant="body1">
-          Time selected: {value}
-          {value === 1 ? "hr" : "hrs"}
-        </Typography>
-        <Box sx={{ flex: "1 1 auto" }} />
-        <Typography variant="body1">
-          Total Cost: &#8377;{value * cost}
-        </Typography>
+        <Stack spacing={2}>
+          <DialogContentText>
+            Select the Start Time and End Time:
+          </DialogContentText>
+          <DateTimePicker
+            label="Checkin"
+            renderInput={(props) => (
+              <TextField disabled size="small" {...props} />
+            )}
+            allowKeyboardControl="false"
+            value={startTime}
+            disablePast
+            minDateTime={baseTime}
+            onChange={setStartTime}
+            minutesStep={15}
+          />
+          <DateTimePicker
+            label="Checkout"
+            renderInput={(props) => (
+              <TextField disabled size="small" {...props} />
+            )}
+            value={endTime}
+            minDateTime={addMinutes(startTime, 15)}
+            onChange={setEndTime}
+            minutesStep={15}
+          />
+          <Typography variant="body1">
+            Duration in Hours: {calcTime()} hrs
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Total Cost: &#8377;
+            {calcTime() * cost}
+          </Typography>
+        </Stack>
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleCancel}>

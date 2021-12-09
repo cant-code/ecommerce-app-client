@@ -8,7 +8,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate, useResolvedPath, useMatch, Link } from "react-router-dom";
 import { useSnackbar } from "../Context/snackbar";
-import { INFO } from "../Utils/Constants";
+import { INFO, REFRESH_TOKEN, TOKEN } from "../Utils/Constants";
+import { DeleteItem } from "../Utils/UtilFunctions";
 
 function CustomButton({ children, to, ...props }) {
   const resolved = useResolvedPath(to);
@@ -26,8 +27,8 @@ export default function Appbar() {
   const { setMsg } = useSnackbar();
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refresh_token");
+    DeleteItem(TOKEN);
+    DeleteItem(REFRESH_TOKEN);
     setMsg("Logged out successfully", INFO);
     navigate("/");
   };

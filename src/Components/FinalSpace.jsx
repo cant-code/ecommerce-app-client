@@ -9,12 +9,14 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { useParams, useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 
 import Car1 from "../static/images/cars/4026221.jpg";
 import Car2 from "../static/images/cars/4064756.jpg";
 import Car3 from "../static/images/cars/5643779.jpg";
 import customFetch from "../Utils/CustomFetch";
 import DialogBox from "./DialogBox";
+import { APPLICATION_JSON } from "../Utils/Constants";
 
 export default function FinalSpace() {
   const params = useParams();
@@ -31,17 +33,20 @@ export default function FinalSpace() {
     setOpen(true);
   };
 
-  const performTransaction = async (value) => {
+  const performTransaction = async (startTimeStamp, endTimeStamp) => {
+    const startTime = format(startTimeStamp, "yyyy-MM-dd'T'HH:mm:ss");
+    const endTime = format(endTimeStamp, "yyyy-MM-dd'T'HH:mm:ss");
     const options = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": APPLICATION_JSON },
       body: JSON.stringify({
-        duration: value,
+        startTimeStamp: startTime,
+        endTimeStamp: endTime,
         vehicularSpace: selectedItem,
       }),
     };
     try {
-      const res = await customFetch("/order", options);
+      const res = await customFetch("/orders", options);
       const resData = await res.json();
       console.log(res);
       console.log(resData);
@@ -51,13 +56,13 @@ export default function FinalSpace() {
     }
   };
 
-  const handleClose = (newValue) => {
+  const handleClose = (startTimeStamp, endTimeStamp) => {
     setOpen(false);
 
-    if (newValue) {
+    if (startTimeStamp && endTimeStamp) {
       console.log(selectedItem);
-      console.log(newValue);
-      performTransaction(newValue);
+      console.log(startTimeStamp, endTimeStamp);
+      performTransaction(startTimeStamp, endTimeStamp);
       return;
     }
 
@@ -103,20 +108,10 @@ export default function FinalSpace() {
                       <Typography gutterBottom variant="h5" component="div">
                         {item.name}
                       </Typography>
-                      <Typography variant="body1" component="div">
+                      {/* <Typography variant="body1" component="div">
                         Available Slots: {item.availableSlots} /{" "}
                         {item.totalSlots}
-                      </Typography>
-                      {data.array?.map((item) => (
-                        <Typography
-                          key={item.id}
-                          component="li"
-                          variant="body2"
-                          color="text.secondary"
-                        >
-                          {item.name}
-                        </Typography>
-                      ))}
+                      </Typography> */}
                     </CardContent>
                     <CardActions>
                       <Typography variant="body1" sx={{ fontWeight: "bold" }}>
