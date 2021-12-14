@@ -13,18 +13,15 @@ const customFetch = async (url, config = {}) => {
 
   if (res.status === 401) {
     const refresh_token = localStorage.getItem(REFRESH_TOKEN);
-    const options = {
-      headers: { Authorization: `Bearer ${refresh_token}` }
-    };
 
-    const response = await fetch("/api/token/refresh", options);
+    const response = await fetch(`/api/token/refresh?token=${refresh_token}`);
 
     localStorage.removeItem(TOKEN);
     localStorage.removeItem(REFRESH_TOKEN);
 
-    if (response.status === 401 || response.status === 403) {
+    if (response.status !== 200) {
       history.push("/login");
-      throw new Error("Token could not be refreshed");
+      return;
     }
 
     const data = await response.json();

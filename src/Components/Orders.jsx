@@ -35,12 +35,11 @@ export default function Orders() {
           <Table aria-label="collapsible table">
             <TableHead>
               <TableRow>
-                {/* <TableCell /> */}
                 <TableCell align="center">ID</TableCell>
                 <TableCell align="center">Status</TableCell>
                 <TableCell align="center">Date Created</TableCell>
                 <TableCell align="center">Start Time</TableCell>
-                <TableCell align="center">Expiry</TableCell>
+                <TableCell align="center">Checkout Time</TableCell>
                 <TableCell align="center">Duration</TableCell>
                 <TableCell align="center">Total Cost</TableCell>
               </TableRow>
@@ -88,7 +87,7 @@ function Row(props) {
           {new Date(row.expiry).toLocaleString()}
         </TableCell>
         <TableCell align="center">
-          {differenceInMinutes(new Date(row.expiry), new Date(row.start)) / 60}
+          {row.duration}
           hrs
         </TableCell>
         <TableCell align="center">&#8377;{row.totalCost}</TableCell>

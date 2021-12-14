@@ -30,7 +30,7 @@ export default function ItemCard({ image, data }) {
             variant="body2"
             color="text.secondary"
           >
-            {item.name}: &#8377;{item.price}
+            {item.name}: &#8377;{item.price}/hr
           </Typography>
         ))}
       </CardContent>

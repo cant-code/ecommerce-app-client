@@ -16,7 +16,7 @@ import Car2 from "../static/images/cars/4064756.jpg";
 import Car3 from "../static/images/cars/5643779.jpg";
 import customFetch from "../Utils/CustomFetch";
 import DialogBox from "./DialogBox";
-import { APPLICATION_JSON } from "../Utils/Constants";
+import { APPLICATION_JSON, INR } from "../Utils/Constants";
 
 export default function FinalSpace() {
   const params = useParams();
@@ -115,7 +115,8 @@ export default function FinalSpace() {
                     </CardContent>
                     <CardActions>
                       <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                        Price: &#8377;{item.price}/hr
+                        Price: {INR}
+                        {item.price}/hr
                       </Typography>
                       <Box sx={{ flex: "1 1 auto" }} />
                       <Button

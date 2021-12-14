@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import Button from "@mui/material/Button";
-import DateTimePicker from "@mui/lab/DateTimePicker";
+import DateTimePicker from "@mui/lab/MobileDateTimePicker";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -16,7 +16,7 @@ import {
   differenceInMinutes,
 } from "date-fns";
 import { GetItem } from "../Utils/UtilFunctions";
-import { END_TIME, START_TIME } from "../Utils/Constants";
+import { DATE_PAST, END_TIME, START_TIME } from "../Utils/Constants";
 
 let baseTime = roundToNearestMinutes(new Date(), { nearestTo: 15 });
 baseTime = isPast(baseTime) ? addMinutes(baseTime, 15) : baseTime;
@@ -25,22 +25,23 @@ export default function DialogBox(props) {
   const { onClose, open, cost, ...other } = props;
   const [startTime, setStartTime] = useState(new Date(GetItem(START_TIME)));
   const [endTime, setEndTime] = useState(new Date(GetItem(END_TIME)));
+  const [errors, setErrors] = useState("");
 
   const handleCancel = () => {
     onClose();
   };
 
   const handleOk = () => {
+    if (isPast(startTime)) {
+      setErrors(DATE_PAST);
+      return;
+    }
     onClose(startTime, endTime);
   };
 
   const calcTime = () => {
     return differenceInMinutes(endTime, startTime) / 60;
   };
-
-  // const handleChange = (event) => {
-  //   setValue(event.target.value);
-  // };
 
   return (
     <Dialog
@@ -59,7 +60,13 @@ export default function DialogBox(props) {
           <DateTimePicker
             label="Checkin"
             renderInput={(props) => (
-              <TextField disabled size="small" {...props} />
+              <TextField
+                disabled
+                size="small"
+                error={errors.length > 0}
+                helperText={errors}
+                {...props}
+              />
             )}
             allowKeyboardControl="false"
             value={startTime}

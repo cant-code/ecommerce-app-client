@@ -5,6 +5,7 @@ export const END_TIME = "end_time";
 export const API = "/api";
 
 export const FIELD_REQUIRED = "This field is required";
+export const DATE_PAST = "Date Time can only be in the future";
 export const LOGGED_IN = "Successfully logged in";
 
 export const ERROR = "error";
@@ -13,3 +14,5 @@ export const INFO = "info";
 export const WARNING = "warning";
 
 export const APPLICATION_JSON = "application/json";
+
+export const INR = "₹";
