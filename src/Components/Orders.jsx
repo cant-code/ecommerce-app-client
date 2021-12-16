@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import customFetch from "../Utils/CustomFetch";
+import { INR } from "../Utils/Constants";
 
 export default function Orders() {
   const [data, setData] = useState([]);
@@ -89,7 +90,10 @@ function Row(props) {
           {row.duration}
           hrs
         </TableCell>
-        <TableCell align="center">&#8377;{row.totalCost}</TableCell>
+        <TableCell align="center">
+          {INR}
+          {row.finalCharge}
+        </TableCell>
       </TableRow>
     </Fragment>
   );

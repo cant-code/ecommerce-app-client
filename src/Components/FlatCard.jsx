@@ -9,6 +9,8 @@ import Car1 from "../static/images/cars/4026221.jpg";
 import Car2 from "../static/images/cars/4064756.jpg";
 import Car3 from "../static/images/cars/5643779.jpg";
 
+import { INR } from "../Utils/Constants";
+
 export default function FlatCard(props) {
   const cars = [Car1, Car2, Car3];
   const { data } = props;
@@ -37,7 +39,8 @@ export default function FlatCard(props) {
         <CardContent sx={{ flex: "1 0 auto" }}>
           <Typography variant="h5">Name: {data.name}</Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Price: &#8377;{data.price} / hr
+            Price: {INR}
+            {data.price} / hr
           </Typography>
         </CardContent>
       </Box>

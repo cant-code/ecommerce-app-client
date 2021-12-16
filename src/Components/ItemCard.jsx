@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
+import { INR } from "../Utils/Constants";
 
 export default function ItemCard({ image, data }) {
   return (
@@ -30,7 +31,8 @@ export default function ItemCard({ image, data }) {
             variant="body2"
             color="text.secondary"
           >
-            {item.name}: &#8377;{item.price}/hr
+            {item.name}: {INR}
+            {item.price}/hr
           </Typography>
         ))}
       </CardContent>

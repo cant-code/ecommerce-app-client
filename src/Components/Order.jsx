@@ -83,24 +83,32 @@ export default function Order() {
                   sx={{ width: 200, height: 200 }}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <Stack spacing={1}>
-                  <Stack>
-                    <Typography variant="h3">Invoice</Typography>
+              <Grid container item xs={6}>
+                <Grid item xs={6}>
+                  <Stack spacing={1}>
+                    <Stack>
+                      <Typography variant="h3">Invoice</Typography>
+                    </Stack>
+                    <Stack>
+                      <Typography variant="h6">Invoice Number:</Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        {data.id}
+                      </Typography>
+                    </Stack>
+                    <Stack>
+                      <Typography variant="h6">Date Created:</Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        {new Date(data.dateCreated).toLocaleString()}
+                      </Typography>
+                    </Stack>
                   </Stack>
-                  <Stack>
-                    <Typography variant="h6">Invoice Number:</Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      {data.id}
-                    </Typography>
-                  </Stack>
-                  <Stack>
-                    <Typography variant="h6">Date Created:</Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      {new Date(data.dateCreated).toLocaleString()}
-                    </Typography>
-                  </Stack>
-                </Stack>
+                </Grid>
+                <Grid item xs={6}>
+                  <img
+                    alt="QR Code"
+                    src={`data:image/png;base64,${data.qrcode}`}
+                  />
+                </Grid>
               </Grid>
             </Grid>
             <Divider sx={{ my: 2 }} />
@@ -139,11 +147,11 @@ export default function Order() {
                       color="error"
                       sx={{ mb: 2, width: "fit-content" }}
                     >
-                      End Booking
+                      Checkout
                     </Button>
                   ) : (
                     <Stack>
-                      <Typography variant="h6">End Time:</Typography>
+                      <Typography variant="h6">Checkout Time:</Typography>
                       <Typography variant="body1" color="text.secondary">
                         {new Date(data.endTime).toLocaleString()}
                       </Typography>
