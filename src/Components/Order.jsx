@@ -96,7 +96,7 @@ export default function Order() {
                       </Typography>
                     </Stack>
                     <Stack>
-                      <Typography variant="h6">Date Created:</Typography>
+                      <Typography variant="h6">Booking Date:</Typography>
                       <Typography variant="body1" color="text.secondary">
                         {new Date(data.dateCreated).toLocaleString()}
                       </Typography>

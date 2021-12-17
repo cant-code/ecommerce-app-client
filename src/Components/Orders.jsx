@@ -37,7 +37,7 @@ export default function Orders() {
               <TableRow>
                 <TableCell align="center">ID</TableCell>
                 <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Date Created</TableCell>
+                <TableCell align="center">Booking Date</TableCell>
                 <TableCell align="center">Start Time</TableCell>
                 <TableCell align="center">Checkout Time</TableCell>
                 <TableCell align="center">Duration</TableCell>
