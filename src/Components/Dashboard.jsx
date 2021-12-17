@@ -155,7 +155,6 @@ export default function Dashboard() {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                focused
                 value={searchVal}
                 onChange={(e) => setSearchVal(e.target.value)}
                 placeholder="Search…"

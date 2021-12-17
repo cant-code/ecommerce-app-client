@@ -135,7 +135,7 @@ export default function Order() {
                     <Typography variant="h4">Booking Status:</Typography>
                     <Typography
                       variant="h5"
-                      color={getStatus() ? "success.main" : "text.secondary"}
+                      color={getStatus() ? "success.main" : "error.main"}
                     >
                       {data.status}
                     </Typography>

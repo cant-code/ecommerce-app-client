@@ -76,7 +76,14 @@ function Row(props) {
         <TableCell align="center" component="th" scope="row">
           {row.id}
         </TableCell>
-        <TableCell align="center">{row.status}</TableCell>
+        <TableCell
+          align="center"
+          sx={{
+            color: row.status === "CONFIRMED" ? "success.main" : "error.main",
+          }}
+        >
+          {row.status}
+        </TableCell>
         <TableCell align="center">
           {new Date(row.dateCreated).toLocaleString()}
         </TableCell>
