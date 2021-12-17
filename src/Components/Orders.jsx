@@ -19,7 +19,6 @@ export default function Orders() {
     const getData = async () => {
       const res = await customFetch("/orders");
       const data = await res.json();
-      console.log(data);
       setData(data);
     };
     getData();

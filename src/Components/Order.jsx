@@ -42,7 +42,6 @@ export default function Order() {
     if (location?.state === null) {
       navigate("/");
     }
-    console.log(location);
     setData(location?.state);
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps

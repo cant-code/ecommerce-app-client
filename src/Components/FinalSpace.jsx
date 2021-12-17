@@ -69,8 +69,6 @@ export default function FinalSpace() {
     try {
       const res = await customFetch("/orders", options);
       const resData = await res.json();
-      console.log(res);
-      console.log(resData);
       navigate("/order", { state: resData });
     } catch (e) {
       navigate("/error");
@@ -81,8 +79,6 @@ export default function FinalSpace() {
     setOpen(false);
 
     if (startTimeStamp && endTimeStamp) {
-      console.log(selectedItem);
-      console.log(startTimeStamp, endTimeStamp);
       performTransaction(startTimeStamp, endTimeStamp);
       return;
     }

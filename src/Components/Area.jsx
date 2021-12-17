@@ -25,7 +25,6 @@ export default function Area() {
         const data = await res.json();
         setData(data);
         setLoading(false);
-        console.log(data);
       } catch (e) {
         navigate("/error");
       }
