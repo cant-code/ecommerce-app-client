@@ -9,7 +9,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Linker from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
 import Image from "../static/images/5765700.jpg";
@@ -45,6 +45,9 @@ const CustomPaper = styled(Paper)(() => ({
 export default function Login() {
   const { setMsg } = useSnackbar();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname ?? "/";
 
   const initialBody = {
     username: "",
@@ -86,12 +89,12 @@ export default function Login() {
           setMsg(LOGGED_IN, SUCCESS);
           SetItem(TOKEN, data.access_token);
           SetItem(REFRESH_TOKEN, data.refresh_token);
-          navigate("/");
+          navigate(from, { replace: true });
         }
       }
     };
     if (validation) fetchData();
-  }, [body, formErrors, navigate, setMsg, validation]);
+  }, [body, formErrors, navigate, setMsg, validation, from]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -181,11 +184,11 @@ export default function Login() {
               <Grid item>
                 <Linker
                   component={Link}
-                  to="/register"
+                  to="/"
                   variant="body2"
                   underline="none"
                 >
-                  Don't have an account? Sign Up
+                  Continue Browsing
                 </Linker>
               </Grid>
             </Grid>

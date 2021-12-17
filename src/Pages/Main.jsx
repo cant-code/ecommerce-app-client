@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import PrivateRoute from "../Utils/PrivateRoute";
 import Appbar from "../Components/Appbar";
 import Dashboard from "../Components/Dashboard";
 import Area from "../Components/Area";
@@ -15,10 +16,24 @@ export default function Main() {
       <Appbar />
       <Routes>
         <Route index element={<Dashboard />} />
-        <Route path="orders" element={<Orders />} />
+        <Route
+          path="orders"
+          element={
+            <PrivateRoute>
+              <Orders />
+            </PrivateRoute>
+          }
+        />
         <Route path="area/:id" element={<Area />} />
         <Route path="parking/:id" element={<FinalSpace />} />
-        <Route path="order" element={<Order />} />
+        <Route
+          path="order"
+          element={
+            <PrivateRoute>
+              <Order />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<Error />} />
       </Routes>
     </LocalizationProvider>

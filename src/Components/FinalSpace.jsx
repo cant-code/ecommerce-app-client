@@ -8,7 +8,12 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { useParams, useNavigate } from "react-router-dom";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { format } from "date-fns";
 
 import Car1 from "../static/images/cars/4026221.jpg";
@@ -17,20 +22,36 @@ import Car3 from "../static/images/cars/5643779.jpg";
 import customFetch from "../Utils/CustomFetch";
 import DialogBox from "./DialogBox";
 import { APPLICATION_JSON, INR } from "../Utils/Constants";
+import { CheckToken } from "../Utils/UtilFunctions";
 
 export default function FinalSpace() {
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const cars = [Car1, Car2, Car3];
+  const loginStatus = CheckToken();
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [open, setOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleClickListItem = (item) => {
+    if (!loginStatus) {
+      setLoginOpen(true);
+      return;
+    }
     setSelectedItem(item);
     setOpen(true);
+  };
+
+  const handleLoginClose = () => {
+    setLoginOpen(false);
+  };
+
+  const navigateToLogin = () => {
+    navigate("/login", { state: { from: location } });
   };
 
   const performTransaction = async (startTimeStamp, endTimeStamp) => {
@@ -134,13 +155,35 @@ export default function FinalSpace() {
           </>
         )
       )}
-      <DialogBox
-        id="ringtone-menu"
-        keepMounted
-        open={open}
-        onClose={handleClose}
-        cost={selectedItem?.price}
-      />
+      {open && (
+        <DialogBox
+          id="ringtone-menu"
+          open={open}
+          onClose={handleClose}
+          cost={selectedItem?.price}
+        />
+      )}
+      {loginOpen && (
+        <Dialog
+          open={loginOpen}
+          onClose={handleLoginClose}
+          aria-labelledby="login-dialog"
+          aria-describedby="Navigate to login page"
+        >
+          <DialogTitle id="login-dialog-title">Login to Continue</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="login-dialog-description">
+              To continue and confirm your booking, please login.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleLoginClose}>Close</Button>
+            <Button onClick={navigateToLogin} autoFocus>
+              Login
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Container>
   );
 }
