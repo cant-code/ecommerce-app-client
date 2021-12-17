@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
@@ -19,6 +20,7 @@ import { styled, alpha } from "@mui/material/styles";
 import Area1 from "../static/images/area/23433.jpg";
 import Area2 from "../static/images/area/23434.jpg";
 import Area3 from "../static/images/area/20424685.jpg";
+import BgImage from "../static/images/1209.jpg";
 import customFetch from "../Utils/CustomFetch";
 import CardWrapper from "./CardWrapper";
 import { SetItem } from "../Utils/UtilFunctions";
@@ -27,9 +29,10 @@ import { END_TIME, START_TIME } from "../Utils/Constants";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   border: "1px solid",
-  borderColor: alpha(theme.palette.common.black, 0.2),
+  borderColor: alpha(theme.palette.primary.main, 1),
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
+  boxShadow: `${alpha(theme.palette.primary.main, 0.8)} 0 0 0 0.1rem`,
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
     borderColor: alpha(theme.palette.common.black, 1),
@@ -56,6 +59,38 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create("width"),
   },
 }));
+
+const CssTextField = styled(TextField, {
+  shouldForwardProp: (props) => props !== "focusColor",
+})((p) => ({
+  // input label when focused
+  "& label.Mui-focused": {
+    color: p.focusColor,
+  },
+  "& .MuiOutlinedInput-input": {
+    color: p.focusColor,
+  },
+  // focused color for input with variant='standard'
+  "& .MuiInput-underline:after": {
+    borderBottomColor: p.focusColor,
+  },
+  // focused color for input with variant='filled'
+  "& .MuiFilledInput-underline:after": {
+    borderBottomColor: p.focusColor,
+  },
+  // focused color for input with variant='outlined'
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: p.focusColor,
+    },
+  },
+}));
+
+const SearchStyles = {
+  marginTop: "1em",
+  backgroundColor: alpha("#fff", 0.5),
+  padding: "1em",
+};
 
 let baseTime = roundToNearestMinutes(new Date(), { nearestTo: 15 });
 baseTime = isPast(baseTime) ? addMinutes(baseTime, 15) : baseTime;
@@ -102,52 +137,74 @@ export default function Dashboard() {
   };
 
   return (
-    <Container>
-      <form onSubmit={search}>
-        <Stack direction="row" spacing={3} sx={{ marginTop: 3 }}>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
+    <Box
+      display="flex"
+      height="calc(100% - 4em)"
+      sx={{
+        backgroundImage: `url(${BgImage})`,
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <Container>
+        <form onSubmit={search} style={SearchStyles}>
+          <Stack direction="row" spacing={3} sx={{ paddingTop: 3 }}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                focused
+                value={searchVal}
+                onChange={(e) => setSearchVal(e.target.value)}
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
+            <DateTimePicker
+              label="Checkin"
+              renderInput={(props) => (
+                <CssTextField
+                  // focusColor="white"
+                  focused
+                  size="small"
+                  {...props}
+                />
+              )}
+              allowKeyboardControl="false"
+              value={startDate}
+              disablePast
+              minDateTime={baseTime}
+              onChange={setStartDate}
+              minutesStep={15}
             />
-          </Search>
-          <DateTimePicker
-            label="Checkin"
-            renderInput={(props) => (
-              <TextField disabled size="small" {...props} />
-            )}
-            allowKeyboardControl="false"
-            value={startDate}
-            disablePast
-            minDateTime={baseTime}
-            onChange={setStartDate}
-            minutesStep={15}
-          />
-          <DateTimePicker
-            label="Checkout"
-            renderInput={(props) => (
-              <TextField disabled size="small" {...props} />
-            )}
-            value={endDate}
-            minDateTime={addMinutes(startDate, 15)}
-            onChange={setEndDate}
-            minutesStep={15}
-          />
-        </Stack>
-        <Button type="submit" sx={{ marginTop: 1 }} variant="contained">
-          Search
-        </Button>
-      </form>
-      {loading ? (
-        <Typography variant="h5">Loading...</Typography>
-      ) : (
-        data?.length > 0 && <CardWrapper images={areas} data={dataMapper()} />
-      )}
-    </Container>
+            <DateTimePicker
+              label="Checkout"
+              renderInput={(props) => (
+                <CssTextField
+                  // focusColor="white"
+                  focused
+                  size="small"
+                  {...props}
+                />
+              )}
+              value={endDate}
+              minDateTime={addMinutes(startDate, 15)}
+              onChange={setEndDate}
+              minutesStep={15}
+            />
+          </Stack>
+          <Button type="submit" sx={{ marginTop: 1 }} variant="contained">
+            Search
+          </Button>
+        </form>
+        {loading ? (
+          <Typography variant="h5">Loading...</Typography>
+        ) : (
+          data?.length > 0 && <CardWrapper images={areas} data={dataMapper()} />
+        )}
+      </Container>
+    </Box>
   );
 }
