@@ -29,7 +29,7 @@ export default function Orders() {
     <Container sx={{ marginTop: 3 }}>
       <Paper elevation={8} sx={{ pt: 1, minHeight: "70vh" }}>
         <Typography variant="h4" component="div" sx={{ ml: 3 }}>
-          Orders
+          My Orders
         </Typography>
         <TableContainer>
           <Table aria-label="collapsible table">
