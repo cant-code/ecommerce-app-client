@@ -7,6 +7,8 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import DateTimePicker from "@mui/lab/MobileDateTimePicker";
 import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import Stack from "@mui/material/Stack";
 import {
   roundToNearestMinutes,
@@ -14,6 +16,7 @@ import {
   addMinutes,
   format,
   isPast,
+  isBefore,
 } from "date-fns";
 import { styled, alpha } from "@mui/material/styles";
 
@@ -24,20 +27,31 @@ import BgImage from "../static/images/1209.jpg";
 import customFetch from "../Utils/CustomFetch";
 import CardWrapper from "./CardWrapper";
 import { SetItem } from "../Utils/UtilFunctions";
-import { END_TIME, START_TIME } from "../Utils/Constants";
+import { END_TIME, FIELD_REQUIRED, START_TIME } from "../Utils/Constants";
 
-const Search = styled("div")(({ theme }) => ({
+const Search = styled("div", {
+  shouldForwardProp: (props) => props !== "error",
+})(({ theme, error }) => ({
   position: "relative",
   border: "1px solid",
-  borderColor: alpha(theme.palette.primary.main, 1),
+  borderColor: alpha(
+    error ? theme.palette.error.main : theme.palette.primary.main,
+    1
+  ),
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
-  boxShadow: `${alpha(theme.palette.primary.main, 0.8)} 0 0 0 0.1rem`,
+  boxShadow: `${alpha(
+    error ? theme.palette.error.main : theme.palette.primary.main,
+    0.8
+  )} 0 0 0 0.1rem`,
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
-    borderColor: alpha(theme.palette.common.black, 1),
+    borderColor: alpha(
+      error ? theme.palette.error.main : theme.palette.common.black,
+      1
+    ),
   },
-  width: "50%",
+  width: "100%",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -95,6 +109,12 @@ const SearchStyles = {
 let baseTime = roundToNearestMinutes(new Date(), { nearestTo: 15 });
 baseTime = isPast(baseTime) ? addMinutes(baseTime, 15) : baseTime;
 
+const baseErrors = {
+  searchVal: "",
+  startDate: "",
+  endDate: "",
+};
+
 export default function Dashboard() {
   const areas = [Area1, Area2, Area3];
 
@@ -103,6 +123,7 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [startDate, setStartDate] = useState(baseTime);
   const [endDate, setEndDate] = useState(addHours(baseTime, 1));
+  const [errors, setErrors] = useState(baseErrors);
 
   const dataMapper = () => {
     return data
@@ -116,9 +137,40 @@ export default function Dashboard() {
       .flat(1);
   };
 
+  const validateData = () => {
+    let flag = false;
+    if (searchVal === "") {
+      setErrors((e) => ({
+        ...e,
+        searchVal: FIELD_REQUIRED,
+      }));
+      flag = true;
+    }
+    if (isPast(startDate)) {
+      setErrors((e) => ({
+        ...e,
+        startDate: "Date Time cannot be in the past",
+      }));
+      flag = true;
+    }
+    if (isBefore(endDate, startDate)) {
+      setErrors((e) => ({
+        ...e,
+        endDate: "End Date cannot be before Start Date",
+      }));
+      flag = true;
+    }
+    return flag;
+  };
+
   const search = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrors(baseErrors);
+    if (validateData()) {
+      setLoading(false);
+      return;
+    }
     const startTime = format(startDate, "yyyy-MM-dd'T'HH:mm:ss");
     const endTime = format(endDate, "yyyy-MM-dd'T'HH:mm:ss");
     const res = await customFetch(
@@ -136,6 +188,10 @@ export default function Dashboard() {
     setLoading(false);
   };
 
+  const checkError = (name) => {
+    return errors[name].length > 0;
+  };
+
   return (
     <Box
       display="flex"
@@ -150,23 +206,32 @@ export default function Dashboard() {
       <Container>
         <form onSubmit={search} style={SearchStyles}>
           <Stack direction="row" spacing={3} sx={{ paddingTop: 3 }}>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                value={searchVal}
-                onChange={(e) => setSearchVal(e.target.value)}
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
+            <FormControl sx={{ width: "50%" }}>
+              <Search error={checkError("searchVal")}>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  value={searchVal}
+                  onChange={(e) => setSearchVal(e.target.value)}
+                  placeholder="Search…"
+                  inputProps={{ "aria-label": "search" }}
+                />
+              </Search>
+              {checkError("searchVal") && (
+                <FormHelperText error={checkError("searchVal")}>
+                  {errors.searchVal}
+                </FormHelperText>
+              )}
+            </FormControl>
             <DateTimePicker
               label="Checkin"
               renderInput={(props) => (
                 <CssTextField
                   // focusColor="white"
                   focused
+                  error={checkError("startDate")}
+                  helperText={errors.startDate}
                   size="small"
                   {...props}
                 />
@@ -184,6 +249,8 @@ export default function Dashboard() {
                 <CssTextField
                   // focusColor="white"
                   focused
+                  error={checkError("endDate")}
+                  helperText={errors.endDate}
                   size="small"
                   {...props}
                 />
