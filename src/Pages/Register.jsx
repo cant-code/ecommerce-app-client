@@ -9,7 +9,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
@@ -18,16 +17,14 @@ import {
   APPLICATION_JSON,
   ERROR,
   FIELD_REQUIRED,
-  LOGGED_IN,
-  REFRESH_TOKEN,
+  PASSWORD_MATCH,
+  REGISTERED,
   SUCCESS,
   TOKEN,
 } from "../Utils/Constants";
 import { useSnackbar } from "../Context/snackbar";
-import { SetItem } from "../Utils/UtilFunctions";
 
 const LoginGrid = styled(Grid)(() => ({
-  height: "100vh",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -36,28 +33,32 @@ const LoginGrid = styled(Grid)(() => ({
 const CustomPaper = styled(Paper)(() => ({
   margin: "2em 2em",
   padding: "1em 2em",
-  height: "70%",
   textAlign: "center",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
 }));
 
-export default function Login() {
+const initialBody = {
+  username: "",
+  password: "",
+  confirmPassword: "",
+  email: "",
+  firstName: "",
+  lastName: "",
+};
+
+export default function Register() {
   const { setMsg } = useSnackbar();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname ?? "/";
-
-  const initialBody = {
-    username: "",
-    password: "",
-  };
+  const from = location.state?.from?.pathname ?? "/login";
 
   const [body, setBody] = useState(initialBody);
   const [formErrors, setFormErrors] = useState(initialBody);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [validation, setValidation] = useState(false);
 
   useEffect(() => {
@@ -81,17 +82,15 @@ export default function Login() {
           headers: { "Content-Type": APPLICATION_JSON },
           body: JSON.stringify(body),
         };
-        const res = await fetch("/api/login", requestOptions);
-        const data = await res.json();
+        const res = await fetch("/api/register", requestOptions);
         setValidation(false);
-        if (res.status === 401) {
+        if (res.status !== 201) {
+          const data = await res.json();
           setMsg(data.detail, ERROR);
-        } else {
-          setMsg(LOGGED_IN, SUCCESS);
-          SetItem(TOKEN, data.access_token);
-          SetItem(REFRESH_TOKEN, data.refresh_token);
-          navigate(from, { replace: true });
+          return;
         }
+        setMsg(REGISTERED, SUCCESS);
+        navigate("/login");
       }
     };
     if (validation) fetchData();
@@ -107,9 +106,19 @@ export default function Login() {
     const errors = {
       username: "",
       password: "",
+      confirmPassword: "",
     };
     if (!!!body.username.length) errors.username = FIELD_REQUIRED;
     if (!!!body.password.length) errors.password = FIELD_REQUIRED;
+    if (!!!body.confirmPassword.length) errors.confirmPassword = FIELD_REQUIRED;
+    if (
+      body.password.length &&
+      body.confirmPassword.length &&
+      body.confirmPassword !== body.password
+    ) {
+      errors.password = PASSWORD_MATCH;
+      errors.confirmPassword = PASSWORD_MATCH;
+    }
     setFormErrors(errors);
     setValidation(true);
   };
@@ -128,7 +137,7 @@ export default function Login() {
         <CustomPaper elevation={24}>
           <form noValidate autoComplete="off" onSubmit={handleSubmit}>
             <Typography variant="h2" sx={{ marginBottom: "1rem" }}>
-              Login
+              Register
             </Typography>
             <TextField
               variant="outlined"
@@ -142,6 +151,39 @@ export default function Login() {
               onChange={handleChange}
               error={formErrors.username.length > 0}
               helperText={formErrors.username}
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              value={body.email}
+              onChange={handleChange}
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="firstName"
+              label="First Name"
+              name="firstName"
+              value={body.firstName}
+              onChange={handleChange}
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="lastName"
+              label="Last Name"
+              name="lastName"
+              value={body.lastName}
+              onChange={handleChange}
               autoFocus
             />
             <TextField
@@ -172,6 +214,34 @@ export default function Login() {
                 ),
               }}
             />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="confirmPassword"
+              label="Confirm Password"
+              type={showConfirm ? "text" : "password"}
+              id="confirmPassword"
+              value={body.confirmPassword}
+              onChange={handleChange}
+              error={formErrors.confirmPassword.length > 0}
+              helperText={formErrors.confirmPassword}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle confirm password visibility"
+                      onClick={() =>
+                        setShowConfirm((showConfirm) => !showConfirm)
+                      }
+                    >
+                      {showConfirm ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
             <Button
               type="submit"
               fullWidth
@@ -179,21 +249,16 @@ export default function Login() {
               color="primary"
               sx={{ marginTop: (theme) => theme.spacing(1) }}
             >
-              Sign In
+              Register
             </Button>
             <Divider sx={{ my: 2 }} />
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Button component={Link} to="/">
-                Continue Browsing
-              </Button>
-              <Button component={Link} to="/register">
-                Register
-              </Button>
-            </Stack>
+            <Grid sx={{ marginTop: "1rem" }} container direction="row-reverse">
+              <Grid item>
+                <Button component={Link} to="/login">
+                  Login
+                </Button>
+              </Grid>
+            </Grid>
           </form>
         </CustomPaper>
       </LoginGrid>
