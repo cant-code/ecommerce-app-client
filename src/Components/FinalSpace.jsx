@@ -21,8 +21,13 @@ import Car2 from "../static/images/cars/4064756.jpg";
 import Car3 from "../static/images/cars/5643779.jpg";
 import customFetch from "../Utils/CustomFetch";
 import DialogBox from "./DialogBox";
-import { APPLICATION_JSON, INR } from "../Utils/Constants";
-import { CheckToken } from "../Utils/UtilFunctions";
+import {
+  APPLICATION_JSON,
+  END_TIME,
+  INR,
+  START_TIME,
+} from "../Utils/Constants";
+import { CheckToken, GetItem } from "../Utils/UtilFunctions";
 
 export default function FinalSpace() {
   const params = useParams();
@@ -89,7 +94,13 @@ export default function FinalSpace() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await customFetch(`/parkingspace/byId/${params.id}`);
+        const startDate = GetItem(START_TIME);
+        const endDate = GetItem(END_TIME);
+        let url = `/parkingspace/byId/${params.id}`;
+        if (startDate !== null || endDate !== null) {
+          url = url + "?" + new URLSearchParams({ startDate, endDate });
+        }
+        const res = await customFetch(url);
         const data = await res.json();
         setData(data);
         setLoading(false);
@@ -125,10 +136,12 @@ export default function FinalSpace() {
                       <Typography gutterBottom variant="h5" component="div">
                         {item.name}
                       </Typography>
-                      {/* <Typography variant="body1" component="div">
-                        Available Slots: {item.availableSlots} /{" "}
-                        {item.totalSlots}
-                      </Typography> */}
+                      {item.availableSlots > 0 && (
+                        <Typography variant="body1" component="div">
+                          Available Slots: {item.availableSlots} /{" "}
+                          {item.totalSlots}
+                        </Typography>
+                      )}
                     </CardContent>
                     <CardActions>
                       <Typography variant="body1" sx={{ fontWeight: "bold" }}>
