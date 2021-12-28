@@ -10,7 +10,7 @@ export default function CardWrapper({ data, images }) {
       delete item.parkingSlots;
     } else if (Object.keys(item).find((x) => x === "vehicularSpaces")) {
       item.array = item.vehicularSpaces;
-      item.title = "Vehicular Space";
+      item.title = "Parking Space";
       item.link = `/parking/${item.id}`;
       delete item.vehicularSpaces;
     }
