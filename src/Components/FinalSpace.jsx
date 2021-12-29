@@ -8,7 +8,12 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { useParams, useNavigate } from "react-router-dom";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { format } from "date-fns";
 
 import Car1 from "../static/images/cars/4026221.jpg";
@@ -16,21 +21,42 @@ import Car2 from "../static/images/cars/4064756.jpg";
 import Car3 from "../static/images/cars/5643779.jpg";
 import customFetch from "../Utils/CustomFetch";
 import DialogBox from "./DialogBox";
-import { APPLICATION_JSON, INR } from "../Utils/Constants";
+import {
+  APPLICATION_JSON,
+  END_TIME,
+  INR,
+  START_TIME,
+} from "../Utils/Constants";
+import { CheckToken, GetItem } from "../Utils/UtilFunctions";
 
 export default function FinalSpace() {
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const cars = [Car1, Car2, Car3];
+  const loginStatus = CheckToken();
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [open, setOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleClickListItem = (item) => {
+    if (!loginStatus) {
+      setLoginOpen(true);
+      return;
+    }
     setSelectedItem(item);
     setOpen(true);
+  };
+
+  const handleLoginClose = () => {
+    setLoginOpen(false);
+  };
+
+  const navigateToLogin = () => {
+    navigate("/login", { state: { from: location } });
   };
 
   const performTransaction = async (startTimeStamp, endTimeStamp) => {
@@ -48,8 +74,6 @@ export default function FinalSpace() {
     try {
       const res = await customFetch("/orders", options);
       const resData = await res.json();
-      console.log(res);
-      console.log(resData);
       navigate("/order", { state: resData });
     } catch (e) {
       navigate("/error");
@@ -60,8 +84,6 @@ export default function FinalSpace() {
     setOpen(false);
 
     if (startTimeStamp && endTimeStamp) {
-      console.log(selectedItem);
-      console.log(startTimeStamp, endTimeStamp);
       performTransaction(startTimeStamp, endTimeStamp);
       return;
     }
@@ -72,7 +94,13 @@ export default function FinalSpace() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await customFetch(`/parkingspace/byId/${params.id}`);
+        const startDate = GetItem(START_TIME);
+        const endDate = GetItem(END_TIME);
+        let url = `/parkingspace/byId/${params.id}`;
+        if (startDate !== null || endDate !== null) {
+          url = url + "?" + new URLSearchParams({ startDate, endDate });
+        }
+        const res = await customFetch(url);
         const data = await res.json();
         setData(data);
         setLoading(false);
@@ -108,10 +136,12 @@ export default function FinalSpace() {
                       <Typography gutterBottom variant="h5" component="div">
                         {item.name}
                       </Typography>
-                      {/* <Typography variant="body1" component="div">
-                        Available Slots: {item.availableSlots} /{" "}
-                        {item.totalSlots}
-                      </Typography> */}
+                      {item.availableSlots > 0 && (
+                        <Typography variant="body1" component="div">
+                          Available Slots: {item.availableSlots} /{" "}
+                          {item.totalSlots}
+                        </Typography>
+                      )}
                     </CardContent>
                     <CardActions>
                       <Typography variant="body1" sx={{ fontWeight: "bold" }}>
@@ -134,13 +164,35 @@ export default function FinalSpace() {
           </>
         )
       )}
-      <DialogBox
-        id="ringtone-menu"
-        keepMounted
-        open={open}
-        onClose={handleClose}
-        cost={selectedItem?.price}
-      />
+      {open && (
+        <DialogBox
+          id="ringtone-menu"
+          open={open}
+          onClose={handleClose}
+          cost={selectedItem?.price}
+        />
+      )}
+      {loginOpen && (
+        <Dialog
+          open={loginOpen}
+          onClose={handleLoginClose}
+          aria-labelledby="login-dialog"
+          aria-describedby="Navigate to login page"
+        >
+          <DialogTitle id="login-dialog-title">Login to Continue</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="login-dialog-description">
+              To continue and confirm your booking, please login.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleLoginClose}>Close</Button>
+            <Button onClick={navigateToLogin} autoFocus>
+              Login
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Container>
   );
 }

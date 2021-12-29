@@ -7,6 +7,8 @@ export const API = "/api";
 export const FIELD_REQUIRED = "This field is required";
 export const DATE_PAST = "Date Time can only be in the future";
 export const LOGGED_IN = "Successfully logged in";
+export const REGISTERED = "User successfully registered";
+export const PASSWORD_MATCH = "Password do not match";
 
 export const ERROR = "error";
 export const SUCCESS = "success";

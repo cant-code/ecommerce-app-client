@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import customFetch from "../Utils/CustomFetch";
+import { INR } from "../Utils/Constants";
 
 export default function Orders() {
   const [data, setData] = useState([]);
@@ -18,7 +19,6 @@ export default function Orders() {
     const getData = async () => {
       const res = await customFetch("/orders");
       const data = await res.json();
-      console.log(data);
       setData(data);
     };
     getData();
@@ -28,7 +28,7 @@ export default function Orders() {
     <Container sx={{ marginTop: 3 }}>
       <Paper elevation={8} sx={{ pt: 1, minHeight: "70vh" }}>
         <Typography variant="h4" component="div" sx={{ ml: 3 }}>
-          Orders
+          My Orders
         </Typography>
         <TableContainer>
           <Table aria-label="collapsible table">
@@ -36,7 +36,7 @@ export default function Orders() {
               <TableRow>
                 <TableCell align="center">ID</TableCell>
                 <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Date Created</TableCell>
+                <TableCell align="center">Booking Date</TableCell>
                 <TableCell align="center">Start Time</TableCell>
                 <TableCell align="center">Checkout Time</TableCell>
                 <TableCell align="center">Duration</TableCell>
@@ -75,7 +75,14 @@ function Row(props) {
         <TableCell align="center" component="th" scope="row">
           {row.id}
         </TableCell>
-        <TableCell align="center">{row.status}</TableCell>
+        <TableCell
+          align="center"
+          sx={{
+            color: row.status === "CONFIRMED" ? "success.main" : "error.main",
+          }}
+        >
+          {row.status}
+        </TableCell>
         <TableCell align="center">
           {new Date(row.dateCreated).toLocaleString()}
         </TableCell>
@@ -89,7 +96,10 @@ function Row(props) {
           {row.duration}
           hrs
         </TableCell>
-        <TableCell align="center">&#8377;{row.totalCost}</TableCell>
+        <TableCell align="center">
+          {INR}
+          {row.finalCharge}
+        </TableCell>
       </TableRow>
     </Fragment>
   );

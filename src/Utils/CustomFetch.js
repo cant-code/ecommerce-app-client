@@ -1,9 +1,15 @@
 import { API, REFRESH_TOKEN, TOKEN } from "./Constants";
 import history from './History';
+import { CheckToken } from "./UtilFunctions";
 
 const customFetch = async (url, config = {}) => {
-  const token = localStorage.getItem(TOKEN);
   if (!url.includes(API)) url = API + url;
+  
+  if (!CheckToken()) {
+    return await fetch(url, config);
+  }
+
+  const token = localStorage.getItem(TOKEN);
   config['headers'] = {
     ...config.headers,
     Authorization: `Bearer ${token}`

@@ -16,7 +16,7 @@ import {
   differenceInMinutes,
 } from "date-fns";
 import { GetItem } from "../Utils/UtilFunctions";
-import { DATE_PAST, END_TIME, START_TIME } from "../Utils/Constants";
+import { DATE_PAST, END_TIME, INR, START_TIME } from "../Utils/Constants";
 
 let baseTime = roundToNearestMinutes(new Date(), { nearestTo: 15 });
 baseTime = isPast(baseTime) ? addMinutes(baseTime, 15) : baseTime;
@@ -89,7 +89,7 @@ export default function DialogBox(props) {
             Duration in Hours: {calcTime()} hrs
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Total Cost: &#8377;
+            Total Cost: {INR}
             {calcTime() * cost}
           </Typography>
         </Stack>
