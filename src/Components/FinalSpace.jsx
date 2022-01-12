@@ -96,7 +96,7 @@ export default function FinalSpace() {
       try {
         const startDate = GetItem(START_TIME);
         const endDate = GetItem(END_TIME);
-        let url = `/parkingspace/byId/${params.id}`;
+        let url = `/parkingspace/${params.id}`;
         if (startDate !== null || endDate !== null) {
           url = url + "?" + new URLSearchParams({ startDate, endDate });
         }

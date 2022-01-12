@@ -21,7 +21,7 @@ export default function Area() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await customFetch(`/area/byId/${params.id}`);
+        const res = await customFetch(`/area/${params.id}`);
         const data = await res.json();
         setData(data);
         setLoading(false);
