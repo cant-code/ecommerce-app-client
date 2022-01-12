@@ -11,6 +11,7 @@ import { useNavigate, useResolvedPath, useMatch, Link } from "react-router-dom";
 import { useSnackbar } from "../Context/snackbar";
 import { INFO, REFRESH_TOKEN, TOKEN } from "../Utils/Constants";
 import { CheckToken, DeleteItem } from "../Utils/UtilFunctions";
+import { useUserDetails } from "../Context/UserContext";
 
 function CustomButton({ children, to, ...props }) {
   const resolved = useResolvedPath(to);
@@ -26,11 +27,13 @@ function CustomButton({ children, to, ...props }) {
 export default function Appbar() {
   const navigate = useNavigate();
   const { setMsg } = useSnackbar();
+  const { removeUser } = useUserDetails();
   const loginStatus = CheckToken();
 
   const logout = () => {
     DeleteItem(TOKEN);
     DeleteItem(REFRESH_TOKEN);
+    removeUser();
     setMsg("Logged out successfully", INFO);
     navigate("/login");
   };

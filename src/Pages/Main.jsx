@@ -9,8 +9,23 @@ import FinalSpace from "../Components/FinalSpace";
 import Error from "../Components/Error";
 import Order from "../Components/Order";
 import Orders from "../Components/Orders";
+import { useUserDetails } from "../Context/UserContext";
+import { CheckToken } from "../Utils/UtilFunctions";
+import customFetch from "../Utils/CustomFetch";
 
 export default function Main() {
+  const { user, updateUser } = useUserDetails();
+
+  const fetchUser = async () => {
+    const res = await customFetch("/user");
+    const data = await res.json();
+    updateUser(data);
+  };
+
+  if (user === null && CheckToken()) {
+    fetchUser();
+  }
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Appbar />
