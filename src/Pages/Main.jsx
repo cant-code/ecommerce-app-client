@@ -12,6 +12,7 @@ import Orders from "../Components/Orders";
 import { useUserDetails } from "../Context/UserContext";
 import { CheckToken } from "../Utils/UtilFunctions";
 import customFetch from "../Utils/CustomFetch";
+import Profile from "../Components/Profile";
 
 export default function Main() {
   const { user, updateUser } = useUserDetails();
@@ -31,6 +32,14 @@ export default function Main() {
       <Appbar />
       <Routes>
         <Route index element={<Dashboard />} />
+        <Route
+          path="profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="orders"
           element={
