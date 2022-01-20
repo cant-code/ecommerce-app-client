@@ -20,6 +20,10 @@ http {
         '"$request" $status $upstream_addr '
         '"$http_referer" "$http_user_agent"';
 
+    upstream backendapi {
+        server ${BACKEND_API};
+    }
+
     server {
         # listen on port 80
         listen 80;
@@ -40,7 +44,7 @@ http {
         }
 
         location /api {
-            proxy_pass http://backend:8080;
+            proxy_pass http://backendapi;
         }
 
         # Media: images, icons, video, audio, HTC
