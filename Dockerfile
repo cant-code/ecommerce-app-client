@@ -6,7 +6,7 @@ COPY . ./
 RUN npm run build
 
 FROM nginx:1.21.4-alpine
-ENV BACKEND_API https://ecommerce-app-api.azurewebsites.net
+ENV BACKEND_API ecommerce-app-api.azurewebsites.net
 COPY --from=build /app/build /var/www
 COPY nginx.conf.template /etc/nginx/templates/
 EXPOSE 80
