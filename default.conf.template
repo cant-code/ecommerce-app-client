@@ -1,7 +1,3 @@
-upstream backendapi {
-   server ${BACKEND_API};
-}
-
 server {
    # listen on port 80
    listen 80;
@@ -19,7 +15,7 @@ server {
    }
 
    location /api {
-      proxy_pass http://backendapi;
+      proxy_pass https://${BACKEND_API};
    }
 
         # Media: images, icons, video, audio, HTC
