@@ -1,6 +1,8 @@
 FROM node:16-alpine as build
 WORKDIR /app
-COPY . ./
+COPY src ./
+COPY public ./
+COPY index.html package.json package-lock.json vite.config.js default.conf.template ./
 RUN npm install
 RUN npm run build
 
