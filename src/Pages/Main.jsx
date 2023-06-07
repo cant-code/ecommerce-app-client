@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import PrivateRoute from "../Utils/PrivateRoute";
 import Appbar from "../Components/Appbar";
 import Dashboard from "../Components/Dashboard";
