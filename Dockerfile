@@ -1,8 +1,8 @@
 FROM node:16-alpine as build
 WORKDIR /app
 COPY . ./
-RUN npm install
-RUN npm run build --ignore-scripts
+RUN npm install --ignore-scripts
+RUN npm run build
 
 FROM nginx:1.25.0-alpine
 RUN addgroup -S nginx \
