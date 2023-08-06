@@ -27,15 +27,13 @@ function CustomButton({ children, to, ...props }) {
 export default function Appbar() {
   const navigate = useNavigate();
   const { setMsg } = useSnackbar();
-  const { removeUser } = useUserDetails();
-  const loginStatus = CheckToken();
+  const { loginStatus, keycloak } = useUserDetails();
 
   const logout = () => {
     DeleteItem(TOKEN);
     DeleteItem(REFRESH_TOKEN);
-    removeUser();
+    keycloak.logout();
     setMsg("Logged out successfully", INFO);
-    navigate("/login");
   };
 
   return (
@@ -49,9 +47,14 @@ export default function Appbar() {
             Home
           </CustomButton>
           {loginStatus && (
-            <CustomButton component={Link} to="/orders">
-              Orders
-            </CustomButton>
+            <>
+              <CustomButton component={Link} to="/orders">
+                Orders
+              </CustomButton>
+              <CustomButton component={Link} to="/profile">
+                Profile
+              </CustomButton>
+            </>
           )}
         </Box>
         <Box sx={{ flexGrow: 1 }} />

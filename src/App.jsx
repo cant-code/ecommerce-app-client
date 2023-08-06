@@ -8,18 +8,19 @@ import UserContext from "./Context/UserContext";
 export default function App() {
   return (
     <SnackbarProvider>
-      <Routes>
-        <Route
-          path="/*"
-          element={
-            <UserContext>
+      <UserContext>
+        <Routes>
+          <Route
+            path="/*"
+            element={
               <Main />
-            </UserContext>
-          }
-        />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-      </Routes>
+            }
+          />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+
+        </Routes>
+      </UserContext>
     </SnackbarProvider>
   );
 }

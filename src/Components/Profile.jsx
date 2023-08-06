@@ -25,12 +25,12 @@ const Entry = ({ name, value, type = "text" }) => (
 );
 
 export default function Profile() {
-  const { user } = useUserDetails();
+  const { keycloak } = useUserDetails();
 
   return (
     <Container>
       <Paper sx={{ padding: 2, my: 2 }} elevation={8}>
-        <Typography variant="h3">Welcome {user?.firstName}</Typography>
+        <Typography variant="h3">Welcome {keycloak.tokenParsed?.given_name}</Typography>
         <Divider sx={{ my: 2 }} />
         <Grid container>
           <Grid item xs={2}>
@@ -46,11 +46,11 @@ export default function Profile() {
           </Grid>
           <Grid item xs={10}>
             <Grid container>
-              <Entry name="First Name" value={user?.firstName} />
-              <Entry name="Last Name" value={user?.lastName} />
-              <Entry name="Username" value={user?.username} />
-              <Entry name="Email" value={user?.email} />
-              <Entry name="Roles" value={user?.roles} type="list" />
+              <Entry name="First Name" value={keycloak.tokenParsed?.given_name} />
+              <Entry name="Last Name" value={keycloak.tokenParsed?.family_name} />
+              <Entry name="Username" value={keycloak.tokenParsed?.preferred_username} />
+              <Entry name="Email" value={keycloak.tokenParsed?.email} />
+              <Entry name="Roles" value={keycloak.tokenParsed?.realm_access?.roles} type="list" />
             </Grid>
           </Grid>
         </Grid>

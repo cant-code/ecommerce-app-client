@@ -1,16 +1,38 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import Keycloak from 'keycloak-js';
 
 export const UserContext = React.createContext(undefined);
 
+export const keycloak = new Keycloak({
+  url: 'http://localhost:8900/',
+  realm: 'ecommerce',
+  clientId: 'ecommerce-ui'
+});
+
+export let loggedIn = false;
+
 const UserContextProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const removeUser = () => setUser(null);
-  const updateUser = (data) => setUser(data);
+
+  const [loginStatus, setLoginStatus] = useState(false);
+
+  useEffect(() => {
+    const initKeycloak = async () => {
+      try {
+        const authenticated = await keycloak.init({ onLoad: 'check-sso' });
+        console.log(`User is ${authenticated ? 'authenticated' : 'not authenticated'}`);
+        setLoginStatus(authenticated);
+        loggedIn = authenticated;
+      } catch (error) {
+        console.error('Failed to initialize adapter:', error);
+      }
+    };
+
+    initKeycloak();
+  }, []);
 
   const contextValue = {
-    user,
-    updateUser: useCallback((data) => updateUser(data), []),
-    removeUser: useCallback(() => removeUser(), []),
+    keycloak,
+    loginStatus
   };
 
   return (
@@ -19,8 +41,8 @@ const UserContextProvider = ({ children }) => {
 };
 
 export const useUserDetails = () => {
-  const { user, updateUser, removeUser } = useContext(UserContext);
-  return { user, updateUser, removeUser };
+  const { keycloak, loginStatus } = useContext(UserContext);
+  return { keycloak, loginStatus };
 };
 
 export default UserContextProvider;

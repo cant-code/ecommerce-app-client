@@ -1,39 +1,28 @@
-import { API, REFRESH_TOKEN, TOKEN } from "./Constants";
-import history from './History';
-import { CheckToken } from "./UtilFunctions";
+import { keycloak, loggedIn } from "../Context/UserContext";
+import { API } from "./Constants";
 
 const customFetch = async (url, config = {}) => {
+
   if (!url.includes(API)) url = API + url;
-  
-  if (!CheckToken()) {
+
+  if (!loggedIn) {
     return await fetch(url, config);
   }
 
-  const token = localStorage.getItem(TOKEN);
   config['headers'] = {
     ...config.headers,
-    Authorization: `Bearer ${token}`
+    Authorization: `Bearer ${keycloak.token}`
   };
 
   let res = await fetch(url, config);
 
   if (res.status === 401) {
-    const refresh_token = localStorage.getItem(REFRESH_TOKEN);
-
-    const response = await fetch(`/api/token/refresh?token=${refresh_token}`);
-
-    localStorage.removeItem(TOKEN);
-    localStorage.removeItem(REFRESH_TOKEN);
-
-    if (response.status !== 200) {
-      history.push("/login");
-      return;
+    try {
+      const refreshed = await keycloak.updateToken(5);
+      console.log(refreshed ? 'Token was refreshed' : 'Token is still valid');
+    } catch (error) {
+      console.error('Failed to refresh the token:', error);
     }
-
-    const data = await response.json();
-
-    localStorage.setItem(TOKEN, data.access_token);
-    localStorage.setItem(REFRESH_TOKEN, data.refresh_token);
 
     res = customFetch(url, config);
   }

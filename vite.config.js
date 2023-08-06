@@ -6,6 +6,14 @@ export default defineConfig(() => {
     build: {
       outDir: 'build',
     },
+    server: {
+      proxy: {
+        "/api": {
+          target: "http://localhost:8080/",
+          secure: false
+        }
+      }
+    },
     plugins: [react()],
   };
 });

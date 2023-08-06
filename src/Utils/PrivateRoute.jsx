@@ -1,10 +1,11 @@
 import { useLocation, Navigate } from "react-router-dom";
-import { CheckToken } from "./UtilFunctions";
+import { useUserDetails } from "../Context/UserContext";
 
 const PrivateRoute = ({ children }) => {
   let location = useLocation();
+  const { loginStatus } = useUserDetails();
 
-  return CheckToken() ? (
+  return loginStatus ? (
     children
   ) : (
     <Navigate to="/login" state={{ from: location }} />

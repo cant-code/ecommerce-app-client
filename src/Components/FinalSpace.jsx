@@ -27,14 +27,15 @@ import {
   INR,
   START_TIME,
 } from "../Utils/Constants";
-import { CheckToken, GetItem } from "../Utils/UtilFunctions";
+import { GetItem } from "../Utils/UtilFunctions";
+import { useUserDetails } from "../Context/UserContext";
 
 export default function FinalSpace() {
   const params = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const cars = [Car1, Car2, Car3];
-  const loginStatus = CheckToken();
+  const { loginStatus } = useUserDetails();
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
