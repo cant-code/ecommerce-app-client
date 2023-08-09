@@ -13,9 +13,7 @@ jobs:
 
   create-image:
     name: Build Image and Push
-    uses: cant-code/github-workflows/.github/workflows/docker-push.yml@main
+    uses: cant-code/github-workflows/.github/workflows/docker-push-no-deps.yml@main
     with:
       DOCKER_TAG: damnationcantcode/parking-space-ui
-      ARTIFACT_NAME: ecommerce-ui
-      ARTIFACT_PATH: target
     secrets: inherit
