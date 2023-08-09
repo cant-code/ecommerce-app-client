@@ -13,7 +13,6 @@ jobs:
 
   create-image:
     name: Build Image and Push
-    needs: build
     uses: cant-code/github-workflows/.github/workflows/docker-push.yml@main
     with:
       DOCKER_TAG: damnationcantcode/parking-space-ui
