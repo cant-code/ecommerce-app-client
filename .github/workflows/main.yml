@@ -11,6 +11,11 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
+  sonarcloud:
+    name: Run SonarCloud Analysis
+    uses: cant-code/github-workflows/.github/workflows/js-sonar-workflow.yml@main
+    secrets: inherit
+
   create-image:
     name: Build Image and Push
     uses: cant-code/github-workflows/.github/workflows/docker-push-no-deps.yml@main
