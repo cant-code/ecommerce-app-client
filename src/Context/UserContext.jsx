@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Keycloak from 'keycloak-js';
+import PropTypes from "prop-types";
 
 export const UserContext = React.createContext(undefined);
 
@@ -39,6 +40,10 @@ const UserContextProvider = ({ children }) => {
     <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 };
+
+UserContextProvider.propTypes = {
+  children: PropTypes.elementType
+}
 
 export const useUserDetails = () => {
   const { keycloak, loginStatus } = useContext(UserContext);
