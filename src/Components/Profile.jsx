@@ -2,6 +2,7 @@ import { Container, Paper, Divider, Grid, Avatar } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useUserDetails } from "../Context/UserContext";
+import PropTypes from "prop-types";
 
 const Entry = ({ name, value, type = "text" }) => (
   <>
@@ -23,6 +24,12 @@ const Entry = ({ name, value, type = "text" }) => (
     </Grid>
   </>
 );
+
+Entry.propTypes = {
+    name: PropTypes.string,
+    value: PropTypes.oneOf(PropTypes.string, PropTypes.array),
+    type: PropTypes.string
+}
 
 export default function Profile() {
   const { keycloak } = useUserDetails();

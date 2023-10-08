@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { INR } from "../Utils/Constants";
+import PropTypes from "prop-types";
 
 export default function ItemCard({ image, data }) {
   return (
@@ -44,4 +45,9 @@ export default function ItemCard({ image, data }) {
       </CardActions>
     </Card>
   );
+}
+
+ItemCard.propTypes = {
+    image: PropTypes.string,
+    data: PropTypes.object
 }
