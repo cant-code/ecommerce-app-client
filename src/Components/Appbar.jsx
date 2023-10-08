@@ -7,11 +7,12 @@ import Box from "@mui/material/Box";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Tooltip from "@mui/material/Tooltip";
-import { useNavigate, useResolvedPath, useMatch, Link } from "react-router-dom";
-import { useSnackbar } from "../Context/snackbar";
-import { INFO, REFRESH_TOKEN, TOKEN } from "../Utils/Constants";
-import { CheckToken, DeleteItem } from "../Utils/UtilFunctions";
-import { useUserDetails } from "../Context/UserContext";
+import {Link, useMatch, useNavigate, useResolvedPath} from "react-router-dom";
+import {useSnackbar} from "../Context/snackbar";
+import {INFO, REFRESH_TOKEN, TOKEN} from "../Utils/Constants";
+import {DeleteItem} from "../Utils/UtilFunctions";
+import {useUserDetails} from "../Context/UserContext";
+import PropTypes from "prop-types";
 
 function CustomButton({ children, to, ...props }) {
   const resolved = useResolvedPath(to);
@@ -22,6 +23,11 @@ function CustomButton({ children, to, ...props }) {
       {children}
     </Button>
   );
+}
+
+CustomButton.propTypes = {
+  children: PropTypes.elementType,
+  to: PropTypes.string
 }
 
 export default function Appbar() {
