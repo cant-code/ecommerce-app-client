@@ -4,7 +4,6 @@ import Appbar from "../../src/Components/Appbar";
 import {MemoryRouter} from "react-router-dom";
 import {UserContext} from "../../src/Context/UserContext";
 
-
 const renderComponent = (user = {}) => {
     render(
         <MemoryRouter initialEntries={["/"]}>
