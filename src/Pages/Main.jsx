@@ -6,7 +6,7 @@ import Appbar from "../Components/Appbar";
 import Dashboard from "../Components/Dashboard";
 import Area from "../Components/Area";
 import FinalSpace from "../Components/FinalSpace";
-import Error from "../Components/Error";
+import ErrorPage from "../Components/ErrorPage";
 import Order from "../Components/Order";
 import Orders from "../Components/Orders";
 import { useUserDetails } from "../Context/UserContext";
@@ -58,7 +58,7 @@ export default function Main() {
             </PrivateRoute>
           }
         />
-        <Route path="*" element={<Error />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </LocalizationProvider>
   );
