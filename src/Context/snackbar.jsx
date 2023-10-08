@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useContext } from "react";
 import Snackbar from "../Components/Snackbar";
+import PropTypes from "prop-types";
 
 export const SnackbarContext = React.createContext({
   msg: { msg: "", type: "" },
@@ -25,6 +26,10 @@ const SnackbarProvider = ({ children }) => {
     </SnackbarContext.Provider>
   );
 };
+
+SnackbarProvider.propTypes = {
+  children: PropTypes.elementType
+}
 
 export const useSnackbar = () => {
   const { msg: string, setMsg, removeMsg } = useContext(SnackbarContext);
