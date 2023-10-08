@@ -50,12 +50,11 @@ describe("Snackbar", () => {
 
         expect(screen.getByText(infobox)).toBeDefined();
 
-        const checkSnackBar = async () => {
+        setTimeout(async (resolve) => {
             await waitFor(() => {
                 expect(screen.queryByText(infobox)).toBeNull();
             });
-        }
-
-        setTimeout(checkSnackBar, 6000);
+            resolve();
+        }, 6000);
     });
 });
