@@ -27,7 +27,7 @@ const Entry = ({ name, value, type = "text" }) => (
 
 Entry.propTypes = {
     name: PropTypes.string,
-    value: PropTypes.oneOf(PropTypes.string, PropTypes.array),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     type: PropTypes.string
 }
 
