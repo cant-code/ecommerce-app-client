@@ -50,11 +50,8 @@ describe("Snackbar", () => {
 
         expect(screen.getByText(infobox)).toBeDefined();
 
-        setTimeout(async (resolve) => {
-            await waitFor(() => {
-                expect(screen.queryByText(infobox)).toBeNull();
-            });
-            resolve();
+        setTimeout(() => {
+            expect(screen.queryByText(infobox)).toBeNull();
         }, 6000);
     });
 });
