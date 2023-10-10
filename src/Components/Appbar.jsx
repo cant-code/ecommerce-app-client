@@ -26,7 +26,7 @@ function CustomButton({ children, to, ...props }) {
 }
 
 CustomButton.propTypes = {
-  children: PropTypes.elementType,
+  children: PropTypes.node,
   to: PropTypes.string
 }
 

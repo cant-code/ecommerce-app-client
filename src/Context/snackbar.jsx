@@ -28,7 +28,7 @@ const SnackbarProvider = ({ children }) => {
 };
 
 SnackbarProvider.propTypes = {
-  children: PropTypes.elementType
+  children: PropTypes.node
 }
 
 export const useSnackbar = () => {

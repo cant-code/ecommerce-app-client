@@ -42,7 +42,7 @@ const UserContextProvider = ({ children }) => {
 };
 
 UserContextProvider.propTypes = {
-  children: PropTypes.elementType
+  children: PropTypes.node
 }
 
 export const useUserDetails = () => {
