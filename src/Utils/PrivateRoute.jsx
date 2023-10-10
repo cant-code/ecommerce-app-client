@@ -1,5 +1,6 @@
 import { useLocation, Navigate } from "react-router-dom";
 import { useUserDetails } from "../Context/UserContext";
+import PropTypes from "prop-types";
 
 const PrivateRoute = ({ children }) => {
   let location = useLocation();
@@ -10,6 +11,10 @@ const PrivateRoute = ({ children }) => {
   ) : (
     <Navigate to="/login" state={{ from: location }} />
   );
+};
+
+PrivateRoute.propTypes = {
+  children: PropTypes.elementType
 };
 
 export default PrivateRoute;

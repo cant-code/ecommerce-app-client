@@ -14,6 +14,5 @@ export const DeleteItem = (item) => {
 
 export const CheckToken = () => {
   const token = GetItem(TOKEN);
-  if (token === undefined || token === null) return false;
-  return true;
+  return !(token === undefined || token === null);
 }
