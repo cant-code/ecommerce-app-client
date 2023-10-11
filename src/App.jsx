@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
 import Main from "./Pages/Main";
 import SnackbarProvider from "./Context/snackbar";
-import Register from "./Pages/Register";
 import UserContext from "./Context/UserContext";
 
 export default function App() {
@@ -16,9 +15,7 @@ export default function App() {
               <Main />
             }
           />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-
+          <Route path="login" element={<Login />} />s
         </Routes>
       </UserContext>
     </SnackbarProvider>
