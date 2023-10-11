@@ -1,8 +1,10 @@
 import {describe, expect, test} from 'vitest';
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import {render, screen, waitFor} from "@testing-library/react";
 import {SnackbarContext} from "../../src/Context/snackbar";
 import {ERROR, INFO} from "../../src/Utils/Constants";
 import CustomizedSnackbars from "../../src/Components/Snackbar";
+import {userEvent} from "@testing-library/user-event";
+import {act} from "react-dom/test-utils";
 
 const renderComponent = (msg = {
     msg: {msg: "", type: ""},
@@ -38,7 +40,7 @@ describe("Snackbar", () => {
         expect(screen.getByText(infobox)).toBeDefined();
 
         let byRole = screen.getByRole("button", { name: "Close" });
-        fireEvent.click(byRole);
+        await act(async () => await userEvent.click(byRole));
 
         await waitFor(() => {
             expect(screen.queryByText(infobox)).toBeNull();

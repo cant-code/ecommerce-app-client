@@ -17,12 +17,12 @@ import {
 } from "date-fns";
 import { GetItem } from "../Utils/UtilFunctions";
 import { DATE_PAST, END_TIME, INR, START_TIME } from "../Utils/Constants";
+import PropTypes from "prop-types";
 
 let baseTime = roundToNearestMinutes(new Date(), { nearestTo: 15 });
 baseTime = isPast(baseTime) ? addMinutes(baseTime, 15) : baseTime;
 
-export default function DialogBox(props) {
-  const { onClose, open, cost, ...other } = props;
+export default function DialogBox({ onClose, open, cost, ...other }) {
   const [startTime, setStartTime] = useState(new Date(GetItem(START_TIME)));
   const [endTime, setEndTime] = useState(new Date(GetItem(END_TIME)));
   const [errors, setErrors] = useState("");
@@ -102,4 +102,10 @@ export default function DialogBox(props) {
       </DialogActions>
     </Dialog>
   );
+}
+
+DialogBox.propTypes = {
+  onClose: PropTypes.func,
+  open: PropTypes.bool,
+  cost: PropTypes.number
 }

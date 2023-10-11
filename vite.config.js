@@ -19,7 +19,10 @@ export default defineConfig(() => {
       globals: true,
       environment: 'jsdom',
       coverage: {
-        reporter: ['text', 'lcov', 'html']
+        reporter: ['text', 'lcov', 'html'],
+        extension: ['.js', '.jsx'],
+        all: true,
+        exclude: ['build/**']
       }
     }
   };

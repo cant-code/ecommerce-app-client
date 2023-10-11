@@ -49,5 +49,16 @@ export default function ItemCard({ image, data }) {
 
 ItemCard.propTypes = {
     image: PropTypes.string,
-    data: PropTypes.object
-}
+    data: PropTypes.shape({
+        name: PropTypes.string,
+        area: PropTypes.string,
+        title: PropTypes.string,
+        array: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.number,
+            name: PropTypes.string,
+            price: PropTypes.number
+        })),
+        price: PropTypes.number,
+        link: PropTypes.string
+    })
+};
