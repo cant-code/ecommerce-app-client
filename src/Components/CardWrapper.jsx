@@ -1,5 +1,6 @@
 import Grid from "@mui/material/Grid";
 import ItemCard from "./ItemCard";
+import PropTypes from "prop-types";
 
 export default function CardWrapper({ data, images }) {
   data?.map((item) => {
@@ -30,3 +31,23 @@ export default function CardWrapper({ data, images }) {
     </Grid>
   );
 }
+
+CardWrapper.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    area: PropTypes.string,
+    name: PropTypes.string,
+    title: PropTypes.string,
+    parkingSlots: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      price: PropTypes.number
+    })),
+    vehicularSpaces: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      price: PropTypes.number
+    }))
+  })),
+  images: PropTypes.array
+};

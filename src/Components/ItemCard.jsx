@@ -58,7 +58,6 @@ ItemCard.propTypes = {
             name: PropTypes.string,
             price: PropTypes.number
         })),
-        price: PropTypes.number,
         link: PropTypes.string
     })
 };
