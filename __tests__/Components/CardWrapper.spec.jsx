@@ -3,22 +3,7 @@ import {render, screen} from "@testing-library/react";
 import CardWrapper from "../../src/Components/CardWrapper";
 import {INR} from "../../src/Utils/Constants";
 import {MemoryRouter} from "react-router-dom";
-
-const parkingSpace = {
-    id: 5,
-    name: "Parking",
-    area: "Space",
-    title: "Parking Space Title",
-    parkingSlots: [{id: 1, name: "Parking Slot", price: 300}]
-};
-
-const vehicularSpace = {
-    id: 2,
-    name: "Vehicular",
-    area: "Space",
-    title: "Vehicular Space",
-    vehicularSpaces: [{id: 1, name: "Vehicular Space Slot", price: 200}]
-}
+import {parkingSpace, vehicularSpace} from "../Utils/mockData";
 
 const renderComponent = (data) => {
     render(<MemoryRouter>
